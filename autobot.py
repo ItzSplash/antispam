@@ -2,13 +2,14 @@ import os
 import time
 import json
 import discord
-from discord.ext.commands import Bot
 import random
 import asyncio
 import operator
 from discord.ext import commands
 
-Autobot =Bot(command_prefix ="?" , pm_help=True)
+startup_extensions = ["fun", "administration" , "information"]
+Autobot =commands.Bot(command_prefix ="?" , pm_help=True,  description = "A bot made by Itz Splash"  )
+
 @Autobot.event
 async def on_ready():
     print("Autobot is Online!, running version " + discord.__version__ + " of Discord.py")
@@ -16,23 +17,12 @@ async def on_ready():
     await Autobot.change_presence(game=discord.Game(name="Type ?help", type=1))
 
 @Autobot.command(pass_context=True , help= 'to test if the bot is online')
-async def test(ctx):
-    print("?test command has been used in " + ctx.message.server.name + " in " + ctx.message.channel.name )
+async def ping(ctx):
     return await Autobot.say("Autobots, __**Transform and Rollout!**__")
 
-@Autobot.command(pass_context=True , help= "(person) can go kys")
-async def kys(ctx):
-    print("?kys command has been used" )
-    return await Autobot.say(ctx.message.content[5:] + " can go kys")
 
-@Autobot.command(pass_context=True, help= 'shows your MAL, type ?mal (username)')
-async def mal(ctx):
-    print("?mal command has been used" )
-    await Autobot.say("https://myanimelist.net/animelist/" + ctx.message.content[5:])
 
-@Autobot.command()
-async def commmands():
-    await Autobot.say("use the **?help** command")
+
 
 EIGHT_BALL_OPTIONS = [" It is certain", "It is decidedly so", "Without a doubt",
                       "Yes definitely", " You may rely on it", " As I see it yes",
@@ -49,14 +39,10 @@ async def eightball(ctx):
     print("?eightball command has been used" )
     return await Autobot.say('**' + ctx.message.author.name + '**' + " , your prediction :8ball:, **" + random.choice(EIGHT_BALL_OPTIONS) + '**')
 
-@Autobot.command(help= 'invite link for the bot')
-async def invite():
-    print("?invite command has been used" )
-    return await Autobot.say('<https://discordapp.com/api/oauth2/authorize?client_id=332647811885694987&scope=bot&permissions=335670422>')
+
 
 @Autobot.command(pass_context=True, help= 'rolls a dice')
 async def rolldice(ctx):
-    print("?rolldice command has been used" )
     rand_roll = ["1" , '2' , '3' , '4' , '5' , '6']
     return await Autobot.say('**' + ctx.message.author.name + '**' + " , your roll is **" + random.choice(rand_roll) + '**' )
 
@@ -67,16 +53,6 @@ async def rem():
     print("?rem command has been used" )
     return await Autobot.say(random.choice(Rem_photos))
 
-@Autobot.command(pass_context=True, help= 'picks a random number between 1 and a given number')
-async def roll(ctx):
-    print("?roll command has been used" )
-    var = ctx.message.content.split(" ")
-    if len(var)==1:
-        await Autobot.say("**" + ctx.message.author.name + "**, you rolled a **" + str(random.randint(1,int(var[1]))) + "**!")
-    elif len(var)>=2:
-        if var[1].isdigit()==False:
-            return await Autobot.say('**only positive integers may be used**')
-        await Autobot.say("**" + ctx.message.author.name + "**, you rolled a **" + str(random.randint(1,int(var[1]))) + "**!")
 
 @Autobot.command(pass_context=True , help= "google search")
 async def google(ctx):
@@ -88,267 +64,101 @@ async def youtube(ctx):
     print("?youtube command has been used" )
     await Autobot.say("https://www.youtube.com/results?search_query=" + ctx.message.content[9:].replace(" ", "+"))
 
-@Autobot.command(pass_context=True , help = "trump makes it illegal")
-async def illegal(ctx):
-    print("?illegal command has been used" )
-    await Autobot.say("https://storage.googleapis.com/is-now-illegal.appspot.com/gifs/" + ctx.message.content[9:].upper().replace(" ", "+") + ".gif")
+
 
 @Autobot.command(pass_context=True , help = "like another google search")
 async def lmgtfy(ctx):
     print("?lmgtfy command has been used" )
     await Autobot.say("http://lmgtfy.com/?q=" + ctx.message.content[8:].replace(" ", "+"))
 
-sloticons = [":pear:" , ":cherries:" , ":seven:" , ":apple:" , ":grapes:" , ":peach:" , ":tangerine:" , ":bell:" , ":cookie:" ,":pear:" , ":cherries:" , ":apple:" , ":grapes:" , ":peach:" , ":tangerine:" , ":cookie:" ,":pear:" , ":cherries:" , ":apple:" , ":grapes:" , ":peach:" , ":tangerine:" , ":bell:" , ":cookie:" ,] 
+playlists = "weeb" , "chill"
+def check(msg):
+    return msg.content.lower() in playlists
 
 
 
-@Autobot.command(pass_context=True , help= "slot machine, still in the works")
-async def slots(ctx):
-    slotmachine = await Autobot.say(random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
-    await asyncio.sleep(0.5)
-    await Autobot.edit_message(message=slotmachine, new_content = random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
-    await asyncio.sleep(0.2)  
-    await Autobot.edit_message(message=slotmachine, new_content = random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
-    await asyncio.sleep(0.2)
-    await Autobot.edit_message(message=slotmachine, new_content = random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
-    await asyncio.sleep(0.2)
-    await Autobot.edit_message(message=slotmachine, new_content = random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
-    await asyncio.sleep(0.2)   
-    await Autobot.edit_message(message=slotmachine, new_content = random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |   " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n" + "\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons))
 
-@Autobot.command(pass_context=True , help = 'slot command, in the works')
-async def testslots(ctx):
-    slotmachine2 = await Autobot.say( "\n**|   SLOT    MACHINE   |**"
-"\n - - - - - - - - - - - - - - - -"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + '\n'
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n   - - - - - **WIN** - - - - -")
 
-    await Autobot.say(
-    await asyncio.sleep(0.5) + await Autobot.edit_message(message=slotmachine2, new_content = "\n**|   SLOT    MACHINE   |**"
-"\n - - - - - - - - - - - - - - - -"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + '\n'
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n   - - - - - **WIN** - - - - -") + await asyncio.sleep(0.5) + await Autobot.edit_message(message=slotmachine2, new_content = "\n**|   SLOT    MACHINE   |**"
-"\n - - - - - - - - - - - - - - - -"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + '\n'
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n   - - - - - **WIN** - - - - -") + await asyncio.sleep(0.5) + await Autobot.edit_message(message=slotmachine2, new_content = "\n**|   SLOT    MACHINE   |**"
-"\n - - - - - - - - - - - - - - - -"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + '\n'
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n"
-"\n" + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "  |  " + random.choice(sloticons) + "\n   - - - - - **WIN** - - - - -"))
 
-@Autobot.command(pass_context=True , help= "deletes a large amount of messages")
-async def purge(ctx):
-    if ctx.message.author.permissions_in(ctx.message.channel).manage_messages == True:
-        split = ctx.message.content.split(" ") 
-        if len(split) == 1:
-            await Autobot.say("**Must Provide a Number**")
+
+numbers = "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,  'J' , "Q" , "K" , "A"
+suits = ":hearts:" , ":spades:", ":clubs:" , ":diamonds:"
+statistics = {":hearts:": 0, ":clubs:": 0, ":spade:": 0, ":diamond:": 0}
+#random.choice(numbers) + random.choice(suits)
+@Autobot.command(pass_context = True , hidden = True)
+async def poker(ctx):
+    cards2 = []
+    cards = []
+    while len(cards) != 5:
+        cards.append(random.choice(numbers) + random.choice(suits))
+    await Autobot.say("  |  ".join(cards))
+    for card in cards:
+        for suit in statistics.keys():
+            if card.find(suit) != -1:
+                statistics[suit] += 1
+    if statistics[":hearts:" , ":spades:", ":clubs:" , ":diamonds:"] > 4:
+        return await Autobot.say('You Won!')
+    else: return await Autobot.say('You Lost :(')
+
+@Autobot.command(pass_context = True, hidden = True)
+async def embed(ctx):
+    em = discord.Embed(title="test", description='My Embed Content.', colour=0xDEADBF)
+    em.set_author(name='Someone', icon_url=Autobot.user.default_avatar_url)
+    await Autobot.send_message(ctx.message.channel, embed=em)
+
+rps_stuff = "rock" , "paper" , "scissors"
+ps = "paper" , "scissors"
+rp = "rock" , "paper"
+rs = "rock" , "scissors"
+
+@Autobot.command(pass_context= True, hidden = True)
+async def rps(ctx):
+    if random.choice(rps_stuff) == "scissors" == ctx.message.content.split(" ")[1]:
+        if random.choice(rp) == "paper":
+            await Autobot.say("paper! You win!")
         else:
-            deletedmessage =  ctx.message.content.split(" ")[1]
-            await Autobot.purge_from(ctx.message.channel , limit = int(deletedmessage),  check=None)
-
-    else: Autobot.say("You don't have the **manage messages** permission!")
-
-@Autobot.command(pass_context=True , help="kicks a certain user")
-async def kick(ctx):
-    print("?kick command was used by " + ctx.message.author.name)
-    split = ctx.message.content.split(" ")
-     
-    if ctx.message.author.permissions_in(ctx.message.channel).kick_members == True:
-        split = ctx.message.content.split(" ")
-        if len(split) == 1:
-            await Autobot.say("**Must Provide a User**")
-        else:
-            id = split[1].replace("<", "").replace("@", "").replace("!", "").replace(">", "")
-            member = ctx.message.server.get_member(id)
-            if(member == None):
-                return await Autobot.say("User not found!")
-            try:
-                await Autobot.kick(member)
-                await Autobot.say("**Kicked** " + member.name)
-            except:
-                return await Autobot.say("**I don't have enough permissions**!!") 
+            await Autobot.say("Rock! You Lose!")
     else:
-        await Autobot.say("**You don't have enough permissions to kick someone!**")
-@Autobot.command(pass_context=True, help= "bans a given user")
-async def ban(ctx):
-    print("?ban command was used by " + ctx.message.author.name + " to ban " + ctx.message.content.split(" ")[1])
-    
-    if ctx.message.author.permissions_in(ctx.message.channel).ban_members == True:
-        split = ctx.message.content.split(" ") 
-        if len(split) == 1:
-            await Autobot.say("**Must Provide a User**")
-        else:
-            id = split[1].replace("<", "").replace("@", "").replace("!", "").replace(">", "")
-            member = ctx.message.server.get_member(id)
-            if(member == None):
-                return await Autobot.say("User not found!")
-            try:
-                await Autobot.ban(member , delete_message_days=1)
-                await Autobot.say(member.name + " *Got the* **BAN HAMMER**")
-            except:
-                return await Autobot.say("*I don't have permissions!!*") 
-    else:
-        await Autobot.say("*You don't have enough permissions to ban someone!*")
+        if random.choice(rps_stuff) == "paper" == ctx.message.content.split(" ")[1]:
+            await Autobot.say("paper")
+        else: 
+            if random.choice(rps_stuff) == "rock" == ctx.message.content.split(" ")[1]:
+                await Autobot.say("rock")
 
-@Autobot.command(pass_context = True , help = "my youtube playlist")
-async def weebplaylist(ctx):
-    print("?playlist command has been used by " + ctx.message.author.display_name + " in " + ctx.message.server.name)
-    return await Autobot.say("http://www.youtube.com/playlist?list=PLEtcXcxy1h1zlhVhyVbtBN6lU6BnNH9tF")
+@Autobot.command(pass_context=True, hidden = True)
+async def summon(ctx):
+    await Autobot.join_voice_channel(ctx.message.author.voice_channel)
 
-@Autobot.command(pass_context = True , help = "my youtube playlist")
-async def chillstep(ctx):
-    print("?chillstep command has been used by " + ctx.message.author.display_name + " in " + ctx.message.server.name)
-    return await Autobot.say("https://www.youtube.com/watch?v=qIN4jQ7TgmY&index=1&list=PLm7pUcK8LQsmU9vmMdkdY_tVVMUaumuMs&t=922s")
+@Autobot.command(pass_context=True , hidden = True)
+async def play(ctx):
+    voice = await Autobot.join_voice_channel(ctx.message.author.voice_channel)
+    player = await voice.create_ytdl_player(ctx.message.content.split(" ")[1])
+    player.start()
+    await Autobot.say("playing **Shadilay!**")
 
 
 
 
 
-@Autobot.command(pass_context=True , help = "?nickname (name) changes your nickname")
-async def nickname(ctx):
-    await Autobot.change_nickname(ctx.message.author , ctx.message.content[10:])
+@Autobot.command(pass_context = True, hidden = True)
+async def playshit(ctx):
+    voice = await Autobot.join_voice_channel(ctx.message.author.voice_channel)
+    player = voice.create_ffmpeg_player(random.choice(songsss))
+    player.start()
 
-@Autobot.command(pass_context=True , help = "?hehe (text) bot types the (text) and deletes your message")
-async def hehe(ctx):
-    await Autobot.say(ctx.message.content[6:])
-    await Autobot.delete_message(ctx.message)
 
-@Autobot.command(pass_context=True , help = "types lenny and deletes your message")
-async def lenny(ctx):
-    await Autobot.say("( ͡° ͜ʖ ͡°)")
-    await Autobot.delete_message(ctx.message)
+@Autobot.command(hidden = True , pass_context=True)
+async def react(ctx):
+    asyncio.sleep(5)
+    msg = await Autobot.send_message(ctx.message.channel, 'React with thumbs up or thumbs down.')
+    await Autobot.add_reaction(msg , "👍")
+    await Autobot.add_reaction(msg , '👎')
+    res = await Autobot.wait_for_reaction(['👍', '👎'], message=msg , user = ctx.message.author)
+    await Autobot.send_message(ctx.message.channel, '{0.user} reacted with {0.reaction.emoji}!'.format(res))
 
-@Autobot.command(help = "slot machine, still in works")
-async def qwerty():
-    return await Autobot.say(
-"\n**|   SLOT    MACHINE   |**"
-"\n - - - - - - - - - - - - - - - -"
-"\n   :banana:   |   :banana:   |   :banana:"
-"\n"
-"\n   :banana:   |   :banana:   |   :banana:"
-"\n"
-"\n   :banana:   |   :banana:   |   :banana:"
-"\n   - - - - - **WIN** - - - - -")
-
-@Autobot.command(help= "tell the bot to kys")
-async def suicide():
-    await Autobot.say("https://cdn.discordapp.com/attachments/258456438265872385/345755966475862046/unknown.png")
-
-@Autobot.command(past_context=True , help= "creates a voice or text channel")
-async def cchannel(ctx):
-    await Autobot.create_channel(ctx.message.server, ctx.message.context.split(" ")[1], type=discord.ChannelType.voice)
-    await Autobot.say("Created the **'" + ctx.message.content.split(" ")[1] + "'** Channel")
-
-@Autobot.command(past_context=True , help= "creates a voice or text channel")
-async def cchanneltest(ctx):
-    await client.create_channel(ctx.message.server, 'Voice', type=discord.ChannelType.voice)
-
-@Autobot.command()
-async def pepe():
-    await Autobot.say("```css"
-    "\n__________████████_____██████"
-"\n_________█░░░░░░░░██_██░░░░░░█"
-"\n________█░░░░░░░░░░░█░░░░░░░░░█"
-"\n_______█░░░░░░░███░░░█░░░░░░░░░█"
-"\n_______█░░░░███░░░███░█░░░████░█"
-"\n______█░░░██░░░░░░░░███░██░░░░██"
-"\n_____█░░░░░░░░░░░░░░░░░█░░░░░░░░███"
-"\n____█░░░░░░░░░░░░░██████░░░░░████░░█"
-"\n____█░░░░░░░░░█████░░░████░░██░░██░░█"
-"\n___██░░░░░░░███░░░░░░░░░░█░░░░░░░░███"
-"\n__█░░░░░░░░░░░░░░█████████░░█████████"
-"\n_█░░░░░░░░░░█████_████___████_█████___█"
-"\n_█░░░░░░░░░░█______█_███__█_____███_█___█"
-"\n█░░░░░░░░░░░░█___████_████____██_██████"
-"\n░░░░░░░░░░░░░█████████░░░████████░░░█"
-"\n░░░░░░░░░░░░░░░░█░░░░░█░░░░░░░░░░░░█"
-"\n░░░░░░░░░░░░░░░░░░░░██░░░░█░░░░░░██"
-"\n░░░░░░░░░░░░░░░░░░██░░░░░░░███████"
-"\n░░░░░░░░░░░░░░░░██░░░░░░░░░░█░░░░░█"
-"\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█"
-"\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█"
-"\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█"
-"\n░░░░░░░░░░░█████████░░░░░░░░░░░░░░██"
-"\n░░░░░░░░░░█▒▒▒▒▒▒▒▒███████████████▒▒█"
-"\n░░░░░░░░░█▒▒███████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█"
-"\n░░░░░░░░░█▒▒▒▒▒▒▒▒▒█████████████████"
-"\n░░░░░░░░░░████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█"
-"\n░░░░░░░░░░░░░░░░░░██████████████████"
-"\n░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░█"
-"\n██░░░░░░░░░░░░░░░░░░░░░░░░░░░██"
-"\n▓██░░░░░░░░░░░░░░░░░░░░░░░░██"
-"\n▓▓▓███░░░░░░░░░░░░░░░░░░░░█"
-"\n▓▓▓▓▓▓███░░░░░░░░░░░░░░░██"
-"\n▓▓▓▓▓▓▓▓▓███████████████▓▓█"
-"\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██"
-"\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█"
-"\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█"
-"\n"
-"\nOoh oops! all these hot awesome maymays and you decided to look"
-"\ninto these boring lines of codes? interesting indeed!"
-"\nCan we argue that curiosity has deeper root in you than simply"
-"\nseeking a few meaningless internet points?"
-"\n```")
-
-@Autobot.command(help= 'NO NORMIES')
-async def normies():
-    print("?normies command has been used" )
-    return await Autobot.say("N    O     N    O    R    M    I    E    S"
-    '\nO'
-    '\n'
-    '\nN'
-    '\nO'
-    '\nR'
-    '\nM'
-    '\nI'
-    '\nE'
-    '\nS')
-
-@Autobot.command(pass_context= True , help = "gives you a role")
-async def iam(ctx):
-    print("The ?iam command has been used")
-    role_name = ctx.message.content[5:].lower()
-    for role in ctx.message.server.roles:
-        if role.name.lower() == role_name:
-            await Autobot.add_roles(ctx.message.author , role)
-            await Autobot.send_message(ctx.message.channel , "added the **" + ctx.message.content[5:] + "** role!")
-
-@Autobot.command(pass_context= True , help = "mutes a user")
-async def mute(ctx):
-    print("The ?mute command has been used to mute "  + ctx.message.content.split(" ")[1].nick)
-    role_name = "muted"
-    for role in ctx.message.server.roles:
-        if role_name.lower() == "muted":
-            
-            id = ctx.message.content.split(" ")[1].replace("<", "").replace("@", "").replace("!", "").replace(">", "")
-            member = ctx.message.server.get_member(id)
-            
-            await Autobot.add_roles(member , role_name)
-
-@Autobot.command(pass_context= True , help = "takes away a role")
-async def imnot(ctx):
-    print("The ?imnot command has been used")
-    role_name = ctx.message.content[7:]
-    for role in ctx.message.server.roles:
-        if role.name.lower() == role_name:
-            await Autobot.remove_roles(ctx.message.author , role)
-
-@Autobot.command(pass_context= True , help = "creates a role")
-async def makerole(ctx):
-    print("The ?makerole command has been used by " + ctx.message.author.name)
-    await Autobot.create_role(ctx.message.server , name = ctx.message.content[10:])
-
-#@Autobot.command(pass_context= True , help = "takes away a role")
-#async def editrole(ctx):
-    #print("The ?editrole command has been used")
-    #role_name = ctx.message.content[10:]
-    #for role in ctx.message.server.roles:
-        #if role.name.lower() == role_name:
-            #await Autobot.edit_role(ctx.message.server , role, color = discord.Color(0x + ctx.message.content.split(" ")[2]) 
-            # do this when i get the chance
+@Autobot.command(pass_context = True, hidden = True)
+async def dmmeboi(ctx):
+    await Autobot.send_message(ctx.message.author , "hey uwu" )
 
 
 gengar_pic  =  "https://imgur.com/asTuRbY"
@@ -433,16 +243,15 @@ thailand = "http://imgur.com/iyn54lZ"
 uk = "http://imgur.com/wrhMNAk"
 
 
-worldflags = {usaflag: "usa;us;united states", australia: "australia" , argentina: "argentina" , bolivia: "bolivia" ,
- brazil: "brazil" , chile: "chile" , colombia : "colombia" , costa_rica: "costa rica" , china: "china" , 
- czech_republic: "czech republic" , cuba_flag: "cuba" , dominican_republic: "dominican republic" , denmark:
- "denmark" , ecuador: "ecuador" , egypt:"egypt" , ethiopia: "ethiopia" , france:"france" , finland: "finland",  germany:"germany" , greece:"greece" , greenland: "greenland" , hungary: "hungary" , iceland: "iceland" , 
-  iraq : "iraq" , italy: "italy" , ireland: "ireland" , india: "india" , israel:"israel" , japan: "japan" , 
-   kekistan:"kekistan" , mexico: "mexico" , nicaragua:"nicaragua" ,  peru:"peru" , portugal:"portugal" , 
-   swiss:"switzerland" , spain:"spain" , sweden:"sweden" , singapore:"singapore" , turkey:"turkey" , 
-   thailand:"thailand" , uk:"uk;britian"  }
-
-
+worldflags = {usaflag: "usa" , australia: "australia" , argentina: "argentina" , bolivia: "bolivia" ,
+brazil: "brazil" , chile: "chile" , colombia : "colombia" , costa_rica: "costa rica" , china: "china" , 
+czech_republic: "czech republic" , cuba_flag: "cuba" , dominican_republic: "dominican republic" , denmark:
+"denmark" , ecuador: "ecuador" , egypt:"egypt" , ethiopia: "ethiopia" , france:"france" , finland: "finland",  germany:"germany" , greece:"greece" , greenland: "greenland" , hungary: "hungary" , iceland: "iceland" , 
+iraq : "iraq" , italy: "italy" , ireland: "ireland" , india: "india" , israel:"israel" , japan: "japan" , 
+kekistan:"kekistan" , mexico: "mexico" , nicaragua:"nicaragua" ,  peru:"peru" , portugal:"portugal" , 
+swiss:"switzerland" , spain:"spain" , sweden:"sweden" , singapore:"singapore" , turkey:"turkey" , 
+thailand:"thailand" , uk:"uk"  }
+	   
 deku = "http://imgur.com/jcgWTd2"
 misuzu = "http://imgur.com/uwlpzRA"
 esdeath = "http://imgur.com/HOpqOfv"
@@ -464,12 +273,10 @@ sagiri = "http://imgur.com/Lk5EEN3"
 
 animecharacter = {deku: "deku;midoriya" , misuzu:"misuzu" , esdeath:"esdeath" , akame:"akame" , kanade:"kanade" , yuri : "yuri" , satoru:"satoru" , kayo:"kayo" , bakugou:"bakugou" , uraraka:"uraraka" , tzuyu: "tzuyu;tzu;froppy" , nagisa:"nagisa" , tomoya:"tomoya;okazaki" , roka:"roka" , L: "L" , light:"light;yagami;yagami light;light yagami" , lucy:"lucy" , sagiri:"sagiri" , }
 
-
-
-
 @Autobot.command(pass_context= True , help = "trivia, type ?trivia for trivia list")
 async def trivia(ctx):
-    if len(ctx.message.content.split(" ")) == 1:    return await Autobot.send_message(ctx.message.channel, "**Must include a trivia game! , type ?trivia (game)** \n \n List of Trivia Games:\n-**pokemon**\n-**flags** \n-**anime**")
+    if len(ctx.message.content.split(" ")) == 1:    
+        return await Autobot.send_message(ctx.message.channel, "**Must include a trivia game! , type ?trivia (game)** \n  List of Trivia Games:\n-**pokemon**\n-**flags**\n-**anime** ")
     trivia1 = ctx.message.content.split(" ")[1].lower()
     if trivia1 == "pokemon":
         pokemon_trivia = await Autobot.say("You picked the **Pokemon** trivia game!")
@@ -499,9 +306,11 @@ async def trivia(ctx):
             await Autobot.send_message(ctx.message.channel, "What is this Pokemon? \n" + key)
             def check(msg):
                 return msg.content.lower() == pokemon[key]
-            waitmsg = await Autobot.wait_for_message(15, channel=ctx.message.channel, check=check)    
+            waitmsg = await Autobot.wait_for_message(15, channel=ctx.message.channel, check=check)
+            
             if waitmsg == None:
-                    await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + pokemon[key])
+                await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + pokemon[key])
+            
             else:
                 await Autobot.send_message(ctx.message.channel, waitmsg.author.name + " guessed it right! The answer was: " + pokemon[key])
                 if dict.get(waitmsg.author.id) == None:
@@ -516,8 +325,6 @@ async def trivia(ctx):
                         for key in sorted_d:
                             endscores = endscores + ctx.message.server.get_member(key[0]).name + " " + str(key[1]) + "\n"
                         return await Autobot.send_message(ctx.message.channel, endscores + "```") 
-
-
             await asyncio.sleep(5)
     trivia1 = ctx.message.content.split(" ")[1].lower()
     if trivia1 == "flags":
@@ -548,15 +355,12 @@ async def trivia(ctx):
             key = list(worldflags.keys())[num-1]
             await Autobot.send_message(ctx.message.channel, "What is this Flag? \n" + key)
             def check(msg):
-                return msg.content.lower() in worldflags[key].split(";")
-            
+                return msg.content.lower() == worldflags[key]
             waitmsg = await Autobot.wait_for_message(15, channel=ctx.message.channel, check=check)
-            
             if waitmsg == None:
-                await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + worldflags[key].split(";")[0])
-            
+                await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + worldflags[key])
             else:
-                await Autobot.send_message(ctx.message.channel, waitmsg.author.name + " guessed it right! The answer was: " + worldflags[key].split(";")[0])
+                await Autobot.send_message(ctx.message.channel, waitmsg.author.name + " guessed it right! The answer was: " + worldflags[key])
                 if dict.get(waitmsg.author.id) == None:
                     dict[waitmsg.author.id] = 1
                 else:
@@ -564,13 +368,12 @@ async def trivia(ctx):
                     
                     if dict[waitmsg.author.id] == 10:
                         sorted_d = sorted(dict.items(), key=operator.itemgetter(1))
-                        endscores = "```py"
+                        endscores = "```"
 
                         for key in sorted_d:
                             endscores = endscores + ctx.message.server.get_member(key[0]).name + " " + str(key[1]) + "\n"
                         return await Autobot.send_message(ctx.message.channel, endscores + "```") 
             await asyncio.sleep(5)
-    
     trivia1 = ctx.message.content.split(" ")[1].lower()
     if trivia1 == "anime":
         pokemon_trivia = await Autobot.say("You picked the **Anime Main Character** trivia game!")
@@ -602,10 +405,10 @@ async def trivia(ctx):
             def check(msg):
                 return msg.content.lower() in animecharacter[key].split(";")
             waitmsg = await Autobot.wait_for_message(15, channel=ctx.message.channel, check=check)
-            if waitmsg == None:
-                await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + animecharacter[key].split(";"))
+            if waitmsg is None:
+                await Autobot.send_message(ctx.message.channel, "No one guessed it right?! The answer was: " + animecharacter[key])
             else:
-                await Autobot.send_message(ctx.message.channel, waitmsg.author.name + " guessed it right! The answer was: " + animecharacter[key].split(";"))
+                await Autobot.send_message(ctx.message.channel, waitmsg.author.name + " guessed it right! The answer was: " + waitmsg.content)
                 if dict.get(waitmsg.author.id) == None:
                     dict[waitmsg.author.id] = 1
                 else:
@@ -619,100 +422,18 @@ async def trivia(ctx):
                             endscores = endscores + ctx.message.server.get_member(key[0]).name + " " + str(key[1]) + "\n"
                         return await Autobot.send_message(ctx.message.channel, endscores + "```") 
             await asyncio.sleep(5)
+	
+
+
+if __name__ == "__main__":
+    for extension in startup_extensions:
+        try:
+            Autobot.load_extension(extension.lower())
+        except Exception as e:
+            exc = '{}: {}'.format(type(e).__name__, e)
+            print('Failed to load extension {}\n{}'.format(extension.lower(), exc))
 
 
 
-@Autobot.command(pass_context = True)
-async def avatar(ctx):
-    if len(ctx.message.content.split(" ")) == 1:
-        em = discord.Embed(title="test", description=None, colour=0xDEADBF )
-        set_image(ctx.message.author.avatar_url.replace("?size=1024" , ""))
-        em.set_author(name="Autobot", icon_url=Autobot.user.default_avatar_url)
-        await Autobot.send_message(ctx.message.channel, embed=em)
-    else:
-        id = ctx.message.content.split(" ")[1].replace("<", "").replace("@", "").replace("!", "").replace(">", "")
-        member = ctx.message.server.get_member(id)
-        await Autobot.say(member.avatar_url.replace("?size=1024" , ""))
-
-@Autobot.command(pass_context = True)
-async def userinfo(ctx):
-    print("?userinfo was used")
-    if len(ctx.message.content.split(" ")) == 1:
-        await Autobot.say(
-        "```" + ctx.message.author.name + ", Your discriminator is " + ctx.message.author.discriminator + "```")
-    else:
-        id = ctx.message.content.split(" ")[1].replace("<", "").replace("@", "").replace("!", "").replace(">", "")
-        member = ctx.message.server.get_member(id)
-        await Autobot.say("```The person's discrim is **" + member.discriminator + "**```")
-
-
-
-@Autobot.command(pass_context= True)
-async def taste(ctx):
-    print("?taste command has been used")
-    await Autobot.say(ctx.message.content[7:] + " has shit taste")
-
-numbers = "2" , "3" , "4" , "5" , "6" , "7" , "8" , "9" , "10" ,  'J' , "Q" , "K" , "A"
-suits = ":hearts:" , ":spades:", ":clubs:" , ":diamonds:"
-statistics = {":hearts:": 0, ":clubs:": 0, ":spade:": 0, ":diamond:": 0}
-#random.choice(numbers) + random.choice(suits)
-@Autobot.command(pass_context = True)
-async def poker(ctx):
-    cards2 = []
-    cards = []
-    while len(cards) != 5:
-        cards.append(random.choice(numbers) + random.choice(suits))
-    await Autobot.say("  |  ".join(cards))
-    for card in cards:
-        for suit in statistics.keys():
-            if card.find(suit) != -1:
-                statistics[suit] += 1
-    if statistics[":hearts:" , ":spades:", ":clubs:" , ":diamonds:"] > 4:
-        return await Autobot.say('You Won!')
-    else: return await Autobot.say('You Lost :(')
-
-@Autobot.command(pass_context = True)
-async def embed(ctx):
-    em = discord.Embed(title="test", description='My Embed Content.', colour=0xDEADBF)
-    em.set_author(name='Someone', icon_url=Autobot.user.default_avatar_url)
-    await Autobot.send_message(ctx.message.channel, embed=em)
-
-rps_stuff = "rock" , "paper" , "scissors"
-ps = "paper" , "scissors"
-rp = "rock" , "paper"
-rs = "rock" , "scissors"
-
-@Autobot.command(pass_context= True)
-async def rps(ctx):
-    if random.choice(rps_stuff) == "scissors" == ctx.message.content.split(" ")[1]:
-        if random.choice(rp) == "paper":
-            await Autobot.say("paper! You win!")
-        else:
-            await Autobot.say("Rock! You Lose!")
-    else:
-        if random.choice(rps_stuff) == "paper" == ctx.message.content.split(" ")[1]:
-            await Autobot.say("paper")
-        else: 
-            if random.choice(rps_stuff) == "rock" == ctx.message.content.split(" ")[1]:
-                await Autobot.say("rock")
-
-@Autobot.command(pass_context=True)
-async def summon(ctx):
-    await Autobot.join_voice_channel(ctx.message.author.voice_channel)
-
-@Autobot.command(pass_context=True)
-async def play(ctx):
-    voice = await Autobot.join_voice_channel(ctx.message.author.voice_channel)
-    player = await voice.create_ytdl_player(ctx.message.content.split(" ")[1])
-    player.start()
-    await Autobot.say("playing **Shadilay!**")
-
-@Autobot.command(pass_context = True , help = "creates an instant invite for the server")
-async def serverinvite(ctx):
-    serverinvite = await Autobot.create_invite(ctx.message.server , max_age = 86400 , max_uses = 1)
-    await Autobot.send_typing(ctx.message.channel)
-    await asyncio.sleep(5)
-    await Autobot.say(serverinvite)
-
-# ip is  174.138.43.238
-Autobot.run(hehehe)
+# ip is  sumtin
+Autobot.run("token")
