@@ -11,7 +11,7 @@ bot =commands.Bot(command_prefix ="!")
 
 @bot.event
 async def on_ready():
-    #what the terminal say
+    #what the terminal say when the bot goes online
     print("Anti-Spam Bot is Online!, running version " + discord.__version__ + " of Discord.py")
     await asyncio.sleep(10)
     #this sets what tame the bot is playing
