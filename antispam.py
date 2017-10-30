@@ -20,6 +20,12 @@ async def on_ready():
 @bot.command()
 async def ping():
     await bot.say("pong!")
+    
+@bot.event
+async def on_message(message):
+    if message.context.startswith("!spam"):
+        if 
+   
 
     #insert your bot token here inside the quotations
 bot.run("bot token")
