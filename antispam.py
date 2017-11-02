@@ -21,10 +21,21 @@ async def on_ready():
 async def ping():
     await bot.say("pong!")
     
-@bot.event
-async def on_message(message):
-    if message.context.startswith("!spam"):
-        if 
+@bot.command(pass_context = True)
+async def spam(ctx)
+    if ctx.message.author.permissions_in(ctx.message.channel).manage_server== True:
+        await bot.say("This channel is now closed - if you message this channel and you dont have a role, you will  be muted")
+        waitmsg = await self.bot.wait_for_message(channel=ctx.message.channel, author = ctx.message.author)
+        async def on_message(message):
+            #do shit about muting people
+            #do a wait_for_message
+        if waitmsg.content.lower() == "!spam stop":
+            return
+            
+        
+        
+    
+            
    
 
     #insert your bot token here inside the quotations
