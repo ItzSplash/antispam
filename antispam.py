@@ -22,7 +22,7 @@ async def ping():
     await bot.say("pong!")
     
 @bot.command(pass_context = True)
-async def spam(ctx)
+async def spam(ctx):
     if ctx.message.author.permissions_in(ctx.message.channel).manage_server== True:
         await bot.say("This channel is now closed - if you message this channel and you dont have a role, you will  be muted")
         waitmsg = await self.bot.wait_for_message(channel=ctx.message.channel, author = ctx.message.author)
